@@ -12,18 +12,20 @@ COMPONENT_TYPE = const.NUMBER
 
 OpenthermNumber = generate.opentherm_ns.class_("OpenthermNumber", number.Number, cg.Component, input.OpenthermInput)
 
-async def new_openthermnumber(config: Dict[str, Any]) -> cg.Pvariable:
+async def new_openthermnumber(config: Dict[str, Any]):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await number.register_number(var, config, min_value = config[input.CONF_min_value], max_value = config[input.CONF_max_value])
+    await number.register_number(var, config, min_value = config[input.CONF_min_value], max_value = config[input.CONF_max_value], step=1.0)
     input.generate_setters(var, config)
     return var
 
 def get_entity_validation_schema(entity: schema.InputSchema) -> cv.Schema:
-    return number.NUMBER_SCHEMA \
+    default_unit: Any = entity.get("unit_of_measurement", cv.UNDEFINED)
+    
+    return number._NUMBER_SCHEMA \
         .extend({
             cv.GenerateID(): cv.declare_id(OpenthermNumber),
-            cv.Optional(CONF_UNIT_OF_MEASUREMENT, entity["unit_of_measurement"]): cv.string_strict
+            cv.Optional(CONF_UNIT_OF_MEASUREMENT, default_unit): cv.string_strict
         }) \
         .extend(input.input_schema(entity)) \
         .extend(cv.COMPONENT_SCHEMA)

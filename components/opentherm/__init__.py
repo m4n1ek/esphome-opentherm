@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 import esphome.codegen as cg
 import esphome.config_validation as cv
@@ -13,14 +13,14 @@ MULTI_CONF = True
 CONFIG_SCHEMA = cv.All(
     cv.Schema({
         cv.GenerateID(): cv.declare_id(generate.OpenthermHub),
-        cv.Optional("in_pin", 4): cv.int_,
-        cv.Optional("out_pin", 5): cv.int_,
-        cv.Optional("ch_enable", True): cv.boolean,
-        cv.Optional("dhw_enable", True): cv.boolean,
-        cv.Optional("cooling_enable", False): cv.boolean,
-        cv.Optional("otc_active", False): cv.boolean,
-        cv.Optional("ch2_active", False): cv.boolean,
-    }).extend(validate.create_entities_schema(schema.INPUTS, (lambda _: cv.use_id(sensor.Sensor))))
+        cv.Optional("in_pin", default=cast(Any, 4)): cv.int_,
+        cv.Optional("out_pin", default=cast(Any, 5)): cv.int_,
+        cv.Optional("ch_enable", default=cast(Any, True)): cv.boolean,
+        cv.Optional("dhw_enable", default=cast(Any, True)): cv.boolean,
+        cv.Optional("cooling_enable", default=cast(Any, False)): cv.boolean,
+        cv.Optional("otc_active", default=cast(Any, False)): cv.boolean,
+        cv.Optional("ch2_active", default=cast(Any, False)): cv.boolean,
+    }).extend(validate.create_entities_schema(schema.INPUTS, (lambda _: cv.use_id(sensor.Sensor)))) # type: ignore
       .extend(cv.COMPONENT_SCHEMA),
     cv.only_with_arduino,
 )

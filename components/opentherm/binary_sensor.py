@@ -10,8 +10,8 @@ COMPONENT_TYPE = const.BINARY_SENSOR
 
 def get_entity_validation_schema(entity: schema.BinarySensorSchema) -> cv.Schema:
     return binary_sensor.binary_sensor_schema(
-        device_class = entity["device_class"] if "device_class" in entity else binary_sensor._UNDEF,
-        icon = entity["icon"] if "icon" in entity else binary_sensor._UNDEF
+        device_class = entity.get("device_class", ""),
+        icon = entity.get("icon", "")
     )
 
 CONFIG_SCHEMA = validate.create_component_schema(schema.BINARY_SENSORS, get_entity_validation_schema)

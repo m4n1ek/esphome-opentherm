@@ -18,14 +18,18 @@ def validate_min_value_less_than_max_value(conf):
     return conf
 
 def input_schema(entity: schema.InputSchema) -> cv.Schema:
+    schemaRange1: Any = entity.get("range", cv.UNDEFINED)[0]
+    schemaRange2: Any = entity.get("range", cv.UNDEFINED)[1]
+    falseVar: Any = False
+    
     schema = cv.Schema({
-        cv.Optional(CONF_min_value, entity["range"][0]): cv.float_range(entity["range"][0], entity["range"][1]),
-        cv.Optional(CONF_max_value, entity["range"][1]): cv.float_range(entity["range"][0], entity["range"][1]),
+        cv.Optional(CONF_min_value, schemaRange1): cv.float_range(entity["range"][0], entity["range"][1]),
+        cv.Optional(CONF_max_value, schemaRange2): cv.float_range(entity["range"][0], entity["range"][1]),
     })
     if CONF_auto_min_value in entity:
-        schema = schema.extend({ cv.Optional(CONF_auto_min_value, False): cv.boolean })
+        schema = schema.extend({ cv.Optional(CONF_auto_min_value, falseVar): cv.boolean })
     if CONF_auto_max_value in entity:
-        schema = schema.extend({ cv.Optional(CONF_auto_max_value, False): cv.boolean })
+        schema = schema.extend({ cv.Optional(CONF_auto_max_value, falseVar): cv.boolean })
     schema = schema.add_extra(validate_min_value_less_than_max_value)
     return schema
 

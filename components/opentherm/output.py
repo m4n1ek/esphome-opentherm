@@ -12,7 +12,7 @@ COMPONENT_TYPE = const.OUTPUT
 
 OpenthermOutput = generate.opentherm_ns.class_("OpenthermOutput", output.FloatOutput, cg.Component, input.OpenthermInput)
 
-async def new_openthermoutput(config: Dict[str, Any], key: str, _hub: cg.MockObj) -> cg.Pvariable:
+async def new_openthermoutput(config: Dict[str, Any], key: str, _hub: cg.MockObj):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await output.register_output(var, config)
@@ -33,7 +33,7 @@ async def to_code(config: Dict[str, Any]) -> None:
         COMPONENT_TYPE, 
         schema.INPUTS,
         OpenthermOutput, 
-        new_openthermoutput, 
+        new_openthermoutput,  # type: ignore
         config
     )
     generate.define_readers(COMPONENT_TYPE, keys)
